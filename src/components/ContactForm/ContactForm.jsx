@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
 import {
   ContainerForm,
   ContactForm,
@@ -25,10 +24,9 @@ export class Form extends Component {
     number: this.props.initialNumber,
   };
 
-  nameInputId = nanoid();
-
   handleChange = event => {
     const { name, value } = event.currentTarget;
+
     this.setState({
       [name]: value,
     });
@@ -37,8 +35,14 @@ export class Form extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    this.props.onSubmit(this.state);
-    console.log('in handleSubmit', this.state);
+    const contacts = this.props.contacts;
+
+    if (contacts.some(contact => contact.name === this.state.name)) {
+      alert(`${this.state.name} is already in contacts`);
+    } else {
+      this.props.onSubmit(this.state);
+    }
+
     this.reset();
   };
 
@@ -50,14 +54,13 @@ export class Form extends Component {
     return (
       <ContainerForm>
         <ContactForm onSubmit={this.handleSubmit}>
-          <Lable htmlFor={this.nameInputId}>
+          <Lable>
             Name
             <Input
               type="text"
+              name="name"
               value={this.state.name}
               onChange={this.handleChange}
-              name="name"
-              id={this.nameInputId}
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
               required

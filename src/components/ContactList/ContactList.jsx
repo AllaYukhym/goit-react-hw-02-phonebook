@@ -1,14 +1,36 @@
-import { ContactListItem } from '../ContactListItem/ContactListItem.styled';
-import { Filter } from 'components/Filter/Filter';
+import PropTypes from 'prop-types';
+import { ContactListItem } from '../ContactListItem/ContactListItem.jsx';
+import { List } from './ContactList.styled.js';
 
-export const ContactList = ({ contacts }) => {
+export const ContactList = ({
+  contacts,
+  value,
+  filteredContacts,
+  removeContact,
+}) => {
   return (
     <>
-      <h3>Contacts</h3>
-      <Filter />
-      <ul>
-        <ContactListItem contacts={contacts} />
-      </ul>
+      <List>
+        {value ? (
+          <ContactListItem
+            removeContact={removeContact}
+            contacts={filteredContacts}
+          />
+        ) : (
+          <ContactListItem removeContact={removeContact} contacts={contacts} />
+        )}
+      </List>
     </>
   );
+};
+
+ContactList.propTypes = {
+  filteredContacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ),
+  removeContact: PropTypes.func.isRequired,
 };
